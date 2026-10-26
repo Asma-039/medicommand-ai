@@ -1,0 +1,97 @@
+erDiagram
+    DEPARTMENTS ||--o{ WARDS : "has"
+    DEPARTMENTS ||--o{ STAFF : "employs"
+    WARDS ||--o{ ROOMS : "is made of"
+    ROOMS ||--o{ BEDS : "contains"
+    WARDS ||--o{ SHIFTS : "is staffed by"
+    STAFF ||--o{ SHIFTS : "works"
+    WARDS ||--o{ ALERTS : "raises"
+    WARDS ||--o{ AI_PREDICTIONS : "is forecast by"
+    STAFF ||--o{ ADMISSIONS : "attends as doctor"
+    BEDS ||--o{ ADMISSIONS : "holds"
+    PATIENTS ||--o{ ADMISSIONS : "has"
+    ADMISSIONS ||--o{ NURSE_ASSIGNMENTS : "is cared for through"
+    STAFF ||--o{ NURSE_ASSIGNMENTS : "cares for as nurse"
+    ADMISSIONS |o--o{ ALERTS : "may trigger"
+
+    DEPARTMENTS {
+        int department_id PK
+        varchar name UK
+        smallint floor_no
+    }
+    WARDS {
+        int ward_id PK
+        int department_id FK
+        varchar name
+        varchar ward_type
+    }
+    ROOMS {
+        int room_id PK
+        int ward_id FK
+        varchar room_number
+        varchar room_type
+    }
+    BEDS {
+        int bed_id PK
+        int room_id FK
+        varchar bed_number
+        varchar status
+    }
+    STAFF {
+        int staff_id PK
+        int department_id FK
+        varchar full_name
+        varchar role
+        varchar email UK
+        varchar phone
+    }
+    PATIENTS {
+        int patient_id PK
+        varchar full_name
+        date date_of_birth
+        char gender
+        varchar blood_group
+        varchar phone
+    }
+    ADMISSIONS {
+        int admission_id PK
+        int patient_id FK
+        int bed_id FK
+        int doctor_id FK
+        timestamptz admitted_at
+        timestamptz discharged_at
+        varchar diagnosis
+        varchar severity
+    }
+    SHIFTS {
+        int shift_id PK
+        int staff_id FK
+        int ward_id FK
+        date shift_date
+        varchar shift_type
+    }
+    NURSE_ASSIGNMENTS {
+        int assignment_id PK
+        int admission_id FK
+        int nurse_id FK
+        date shift_date
+        varchar shift_type
+    }
+    ALERTS {
+        int alert_id PK
+        int ward_id FK
+        int admission_id FK
+        varchar alert_type
+        varchar priority
+        varchar message
+        timestamptz created_at
+        timestamptz resolved_at
+    }
+    AI_PREDICTIONS {
+        int prediction_id PK
+        int ward_id FK
+        date forecast_date
+        numeric predicted_occupancy_pct
+        varchar model_name
+        timestamptz created_at
+    }
